@@ -3,14 +3,10 @@ const mongoose = require('mongoose')//bring in mongoose
 const logger = require('morgan');//logger
 const passport = require('passport');
 
-
-
-
 // importing the routes
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
-
 
 const app = express();
 
@@ -18,7 +14,7 @@ const app = express();
 // body parser middleware which is part of express
 app.use(logger('dev')); // logging
 app.use(express.urlencoded({extended: false}));
-app.use(express.json());
+app.use(express.json());// to access body
 
 //DB config
 const db = require('./config/keys').mongoURI;
@@ -32,7 +28,7 @@ mongoose
 // Passport middleware
 app.use(passport.initialize());
 
-// Passport confi
+// Passport config
 require('./config/passport.js')(passport)
 
 //Use Routes

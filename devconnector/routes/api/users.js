@@ -71,6 +71,7 @@ router.post('/login', (req, res) => {
 	console.log(req.body)
 	const email = req.body.email;
 	const password = req.body.password;
+	// check if email exist
 	User.findOne({ email })
 	.then(user => {
 		if(!user) {
@@ -88,10 +89,14 @@ router.post('/login', (req, res) => {
 				avatar: user.avatar
 			}
 			//sign token
-			jwt.sign(payload, keys.secretOrKey, {expiresIn: 3600}, (err, token) => {
+			// expires in seconds
+			jwt.sign(payload,
+			keys.secretOrKey,
+			{expiresIn: 3600},
+			(err, token) => {
 				res.json({
 					sucess:true,
-					token: 'Bearer ' + token,
+					token: 'Bearer ' + token, // bearer protocol
 				})
 			});
 
@@ -106,8 +111,14 @@ router.post('/login', (req, res) => {
 //@route 	GET api/users/current
 //@desc 	return current user
 //@access 	private
-	router.get('/current', passport.authenticate('jwt', {session: false}),
+router.get('/current',
+	passport.authenticate('jwt',
+	{session: false }),
 		(req, res) => {
-			res.json(req.user)
+			res.json({
+				id: req.user.id,
+				name: req.user.name,
+				email: req.user.email
+			});
 		});
 module.exports = router;
