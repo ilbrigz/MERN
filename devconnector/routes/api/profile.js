@@ -5,6 +5,8 @@ const passport = require('passport');
 
 //Load Validation
 const validateProfileInput = require('../../validation/profile.js')
+const validateExperienceInput = require('../../validation/experience.js');
+const validateEducationInput = require('../../validation/education.js');
 
 // Load profile model
 const Profile = require('../../models/Profile');
@@ -153,6 +155,81 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 		});
 	}
 );
+
+
+// @route 	POST api/profile/experience
+// @desc 	Add experience to profile
+// @access 	Private
+
+router.post('/experience', passport.authenticate('jwt', {session: false}), (req, res) => {
+	const { errors,isValid } = validateExperienceInput(req.body);
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  // application specific logging, throwing an error, or other logic here
+});
+	//check validation result
+	if(!isValid) {
+
+		return res.status(400).json(errors);
+	}
+console.log(req.user.id);
+	Profile.findOne({ user: req.user.id})
+	.then(profile => {
+		console.log(profile,'found');
+		const newExp = {
+			title: req.body.title,
+			company: req.body.company,
+			location: req.body.location,
+			from: req.body.from,
+			to: req.body.to,
+			current: req.body.current,
+			desciption: req.body.desciption
+		}
+		// Add to exp array
+		profile.experience.unshift(newExp);
+		profile.save().then(profile => res.json(profile));
+	}). catch(err => {
+		console.log(err);
+	});
+});
+
+
+// @route 	POST api/profile/education
+// @desc 	Add education to profile
+// @access 	Private
+
+router.post('/education', passport.authenticate('jwt', {session: false}), (req, res) => {
+	const { errors,isValid } = validateEducationInput(req.body);
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  // application specific logging, throwing an error, or other logic here
+});
+	//check validation result
+	if(!isValid) {
+
+		return res.status(400).json(errors);
+	}
+console.log(req.user.id);
+	Profile.findOne({ user: req.user.id})
+	.then(profile => {
+		console.log(profile,'found');
+		const newEdu = {
+			school: req.body.school,
+			degree: req.body.degree,
+			fieldofstudy: req.body.fieldofstudy,
+			from: req.body.from,
+			to: req.body.to,
+			current: req.body.current,
+			desciption: req.body.desciption
+		}
+		// Add to exp array
+		profile.education.unshift(newEdu);
+		profile.save().then(profile => res.json(profile));
+	}). catch(err => {
+		console.log(err);
+	});
+});
+
 
 
 module.exports = router;
