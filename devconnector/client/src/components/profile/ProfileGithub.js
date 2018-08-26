@@ -6,8 +6,8 @@ class ProfileGithub extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clientId: '26c196bacea7db10cf48',
-      clientSecret: '0885cb690e07d2a93a6afb0891fb552fd9f7aa53',
+      clientId: 'c5ad182bbeeefa6b5aab',
+      clientSecret: '6caa68e9a5faaabb7314f809180f5bab24c4f28b',
       count: 5,
       sort: 'created: asc',
       repos: []
@@ -32,36 +32,41 @@ class ProfileGithub extends Component {
 
   render() {
     const { repos } = this.state;
-
-    const repoItems = repos.map(repo => (
-      <div key={repo.id} className="card card-body mb-2">
-        <div className="row">
-          <div className="col-md-6">
-            <h4>
-              <Link to={repo.html_url} className="text-info" target="_blank">
-                {repo.name}
-              </Link>
-            </h4>
-            <p>{repo.description}</p>
-          </div>
-          <div className="col-md-6">
-            <span className="badge badge-info mr-1">
-              Stars: {repo.stargazers_count}
-            </span>
-            <span className="badge badge-secondary mr-1">
-              Watchers: {repo.watchers_count}
-            </span>
-            <span className="badge badge-success">
-              Forks: {repo.forks_count}
-            </span>
+    let repoItems;
+    if (repos.length === 0 || repos.message === 'Not Found') {
+      repoItems = null;
+    } else {
+      repoItems = repos.map(repo => (
+        <div key={repo.id} className="card card-body mb-2">
+          <div className="row">
+            <div className="col-md-6">
+              <h4>
+                <Link to={repo.html_url} className="text-info" target="_blank">
+                  {repo.name}
+                </Link>
+              </h4>
+              <p>{repo.description}</p>
+            </div>
+            <div className="col-md-6">
+              <span className="badge badge-info mr-1">
+                Stars: {repo.stargazers_count}
+              </span>
+              <span className="badge badge-secondary mr-1">
+                Watchers: {repo.watchers_count}
+              </span>
+              <span className="badge badge-success">
+                Forks: {repo.forks_count}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    ));
+      ));
+    }
+
     return (
       <div ref="myRef">
         <hr />
-        <h3 className="mb-4">Latest Github Repos</h3>
+        {!repoItems ? '' : <h3 className="mb-4">Latest Github Repos</h3>}
         {repoItems}
       </div>
     );
