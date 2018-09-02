@@ -60,7 +60,7 @@ class PostForm extends Component {
                 />
               </div>
               <button type="submit" className="btn btn-dark">
-                Submit
+                Submit Now
               </button>
             </form>
           </div>
@@ -81,4 +81,7 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { addPost })(PostForm);
+export default connect(
+  mapStateToProps,
+  { addPost }
+)(PostForm);
